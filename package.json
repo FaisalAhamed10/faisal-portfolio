@@ -2,6 +2,11 @@
   "name": "faisal-portfolio",
   "private": true,
   "type": "module",
-  "scripts": { "dev": "node scripts/serve.mjs 5180" },
-  "dependencies": { "@netlify/blobs": "8.1.0" }
+  "scripts": {
+    "dev": "node scripts/serve.mjs 5180",
+    "stamp": "node scripts/stamp.mjs"
+  },
+  "dependencies": {
+    "@netlify/blobs": "8.1.0"
+  }
 }
