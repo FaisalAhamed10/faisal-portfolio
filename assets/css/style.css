@@ -1046,3 +1046,19 @@ html.modal-open { overflow: hidden; }
   .pm__cover { border-radius: 10px; }
   .pm--posters img { border-radius: 8px; }
 }
+
+/* about: hero character as the portrait */
+.portrait__mono { opacity: .18; translate: 0 -18%; }
+.portrait__me { position: absolute; left: 0; right: 0; margin-inline: auto; bottom: 9%; height: 90%; width: auto; max-width: 92%; object-fit: contain; object-position: bottom; filter: drop-shadow(0 0 1px rgba(255,255,255,.3)) drop-shadow(0 30px 40px rgba(0,0,0,.6)); user-select: none; -webkit-user-drag: none; }
+
+/* contact: WhatsApp note */
+.form__note { display: flex; align-items: center; gap: 8px; color: var(--muted); font-size: 13.5px; margin-top: -4px; }
+.form__note svg { color: #25d366; flex-shrink: 0; }
+
+/* footer: live visitors */
+.visitors-row { display: flex; justify-content: center; }
+.visitors { display: inline-flex; align-items: center; flex-wrap: wrap; justify-content: center; gap: 8px 10px; margin: 0 0 14px; padding: 8px 16px; border-radius: 999px; border: 1px solid var(--line-2); background: var(--card); color: var(--muted); font: 12.5px/1.3 var(--f-mono); }
+.visitors[hidden] { display: none; }
+.visitors b { color: var(--text); font-weight: 700; }
+.visitors .pulse { flex-shrink: 0; }
+@media (max-width: 600px) { .visitors__sep { display: none; } .visitors { font-size: 11.5px; } }

@@ -1,2 +1,22 @@
 [build]
   publish = "."
+
+[functions]
+  directory = "netlify/functions"
+
+# keep source files that sit in the publish folder out of the public site
+[[redirects]]
+  from = "/netlify/*"
+  to = "/404"
+  status = 404
+  force = true
+[[redirects]]
+  from = "/scripts/*"
+  to = "/404"
+  status = 404
+  force = true
+[[redirects]]
+  from = "/package*"
+  to = "/404"
+  status = 404
+  force = true

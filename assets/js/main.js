@@ -10,9 +10,9 @@
 const SITE = {
   name: "Faisal Ahamed",
   role: "Web Developer",
-  // TODO: replace these placeholders with your real contact details
-  email: "hello@example.com",
-  phone: "+00 00000 00000",
+  email: "lupheratech@gmail.com",
+  phone: "+91 78259 92791",
+  whatsapp: "917825992791", // country code + number, digits only (used by the contact form)
   location: "Remote · Working worldwide",
   socials: {
     linkedin: "#",
@@ -228,6 +228,7 @@ function buildChrome() {
     </div>
     <div class="footer__giant" aria-hidden="true">${"FAISAL AHAMED".split("").map((c) => `<b class="gl"><span>${c === " " ? "&nbsp;" : c}</span></b>`).join("")}</div>
     <div class="footer__bottom">
+      <div class="container visitors-row"><p class="visitors" id="visitors" hidden><i class="pulse"></i><span><b id="v-online">1</b> viewing now</span><span class="visitors__sep">·</span><span><b id="v-total">0</b> total visits</span></p></div>
       <div class="container">
         <p>© 2021 All Rights Reserved. Made with <span class="heart">💙</span> by <b>Luphera</b></p>
         <div class="footer__legal"><a href="#">Privacy</a><a href="#">Terms</a></div>
@@ -996,12 +997,16 @@ const POSTER_SETS = [
 // every card on the projects page: real sites + social & creative work first, then the other services
 function buildWork() {
   const SOCIAL = "Social & Creatives";
-  return [
-    ...SITES.map((x) => {
+  const sites = SITES.map((x) => {
       const [build, industry] = x.cat.split(" · ");
-      return { kind: "site", title: x.name, cat: "web", catLabel: "Web Development", badge: "Live", color: x.color, text: x.text, tools: x.tags, img: x.img, url: x.url,
+      const store = /shopify|woocommerce|store/i.test(build); // online stores live under E-commerce
+      return { kind: "site", title: x.name, cat: store ? "ecommerce" : "web", catLabel: store ? "E-commerce" : "Web Development", badge: "Live", color: x.color, text: x.text, tools: x.tags, img: x.img, url: x.url,
         scope: [[build, "Build"], [industry, "Industry"], ["Live", "Status"]] };
-    }),
+    });
+  return [
+    ...sites.filter((x) => x.cat === "web"),
+    ...sites.filter((x) => x.cat === "ecommerce"),
+    ...PROJECTS.filter((x) => x.cat === "ecommerce"),
     ...CINEMATIC.map((c) => ({ kind: "video", title: c.title, cat: "social", catLabel: SOCIAL, badge: "Film", color: "#7c3aed", text: c.text, tools: c.tags, src: c.src,
       scope: [[c.client, "Client"], [c.length, "Length"], [c.format, "Format"]] })),
     ...REELS.map((r) => ({ kind: "video", title: r.title, cat: "social", catLabel: SOCIAL, badge: "Reel", color: "#db2777", src: r.src,
@@ -1012,7 +1017,7 @@ function buildWork() {
       return { kind: "posters", title, cat: "social", catLabel: SOCIAL, badge: `${list.length} posters`, color: "#ea580c", text, tools: inds, list,
         scope: [[list.length, "Posters"], [inds.length, "Industries"], ["Feed + story", "Formats"]] };
     }),
-    ...PROJECTS,
+    ...PROJECTS.filter((x) => x.cat !== "ecommerce"),
   ];
 }
 
@@ -1048,32 +1053,40 @@ function pageProjects() {
   // staggered columns: 3 on desktop (middle column drops), 2 on tablet + phone (right column drops)
   const layout = (shown) => {
     const cols = innerWidth > 1024 ? 3 : 2, drop = innerWidth > 1024 ? 70 : innerWidth > 600 ? 50 : 28;
-    $$(".project", grid).forEach((c) => (c.style.marginTop = ""));
     grid.style.paddingBottom = `${drop}px`;
     grid.style.setProperty("--drop", `${drop}px`);
     shown.forEach((c, i) => c.classList.toggle("is-drop", i % cols === 1));
   };
-  let current = "all", busy = false;
-  const visible = () => $$(".project", grid).filter((c) => !c.classList.contains("is-out"));
-  addEventListener("resize", () => layout(visible()));
+  const cards = $$(".project", grid), filters = $("#filters");
+  const visible = () => cards.filter((c) => !c.classList.contains("is-out"));
+  let current = "all", cols = innerWidth > 1024 ? 3 : 2, revealKilled = false;
+  addEventListener("resize", () => { const c = innerWidth > 1024 ? 3 : 2; if (c !== cols) { cols = c; layout(visible()); } });
   layout(visible());
 
-  $("#filters").addEventListener("click", (e) => {
-    const btn = e.target.closest(".tool-tab"); if (!btn || btn.dataset.f === current || busy) return;
-    current = btn.dataset.f;
-    $$("#filters .tool-tab").forEach((b) => { b.classList.toggle("is-active", b === btn); b.setAttribute("aria-pressed", String(b === btn)); });
-    const cards = $$(".project", grid);
+  const select = (f) => {
+    if (f === current) return;
+    current = f;
+    $$(".tool-tab", filters).forEach((b) => { const on = b.dataset.f === f; b.classList.toggle("is-active", on); b.setAttribute("aria-pressed", String(on)); });
+    const anim = hasGSAP && !reduceMotion;
+    if (anim) {
+      // the page-wide scroll reveal and the filter animation must not fight over the cards
+      if (!revealKilled) { revealKilled = true; ScrollTrigger.getAll().forEach((t) => cards.includes(t.trigger) && t.kill()); }
+      gsap.killTweensOf(cards);
+    }
     const apply = () => {
       const shown = [];
-      cards.forEach((c) => { const on = current === "all" || c.dataset.cat === current; c.classList.toggle("is-out", !on); if (on) shown.push(c); });
+      cards.forEach((c) => { const on = f === "all" || c.dataset.cat === f; c.classList.toggle("is-out", !on); if (on) shown.push(c); });
       layout(shown);
       if (hasGSAP) ScrollTrigger.refresh();
-      if (hasGSAP && !reduceMotion) gsap.fromTo(shown, { opacity: 0, y: 50 }, { opacity: 1, y: 0, duration: 0.7, stagger: 0.06, ease: "power3.out", overwrite: true, clearProps: "transform", onComplete: () => (busy = false) });
-      else busy = false;
+      // if the grid top is off screen, bring the filters back into view
+      if (filters.getBoundingClientRect().top < 0) lenis ? lenis.scrollTo(filters, { offset: -110, duration: 0.8 }) : filters.scrollIntoView({ behavior: "smooth" });
+      if (anim) gsap.fromTo(shown, { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.6, ease: "power3.out", stagger: { amount: Math.min(0.45, shown.length * 0.05) }, clearProps: "transform" });
+      else cards.forEach((c) => { c.style.opacity = 1; c.style.transform = "none"; });
     };
-    busy = true;
-    if (hasGSAP && !reduceMotion) gsap.to(cards.filter((c) => !c.classList.contains("is-out")), { opacity: 0, y: 20, duration: 0.22, ease: "power2.in", overwrite: true, onComplete: apply }); else apply();
-  });
+    const out = visible();
+    if (anim && out.length) gsap.to(out, { opacity: 0, y: 16, duration: 0.18, ease: "power1.in", onComplete: apply }); else apply();
+  };
+  filters.addEventListener("click", (e) => { const btn = e.target.closest(".tool-tab"); if (btn) select(btn.dataset.f); });
 
   // modal
   const modal = $(".modal"), media = $(".modal__media", modal), card = $(".modal__card", modal);
@@ -1127,22 +1140,57 @@ function pageContact() {
   const rules = { name: (v) => v.trim().length > 1, email: (v) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v), message: (v) => v.trim().length > 9 };
   const check = (input) => { const ok = rules[input.name] ? rules[input.name](input.value) : true; input.closest(".field").classList.toggle("has-error", !ok); return ok; };
   Object.keys(rules).forEach((n) => form[n].addEventListener("blur", () => check(form[n])));
-  form.addEventListener("submit", async (e) => {
+  form.addEventListener("submit", (e) => {
     e.preventDefault();
     const ok = Object.keys(rules).map((n) => check(form[n])).every(Boolean);
     if (!ok) { status.className = "form__status err"; status.textContent = "Please fix the highlighted fields."; if (hasGSAP) gsap.fromTo(form, { x: -8 }, { x: 0, duration: 0.5, ease: "elastic.out(1, .3)" }); return; }
-    const btn = $("button[type=submit] .btn-inner", form), old = btn.innerHTML;
-    btn.textContent = "Sending…";
-    try {
-      const res = await fetch("/", { method: "POST", headers: { "Content-Type": "application/x-www-form-urlencoded" }, body: new URLSearchParams(new FormData(form)).toString() });
-      if (!res.ok) throw new Error();
-      status.className = "form__status ok"; status.textContent = "Thanks! Your message is on its way — I'll reply within 24 hours.";
-      form.reset();
-    } catch {
-      status.className = "form__status err"; status.innerHTML = `Couldn't send right now. Please email me at <a href="mailto:${SITE.email}" style="text-decoration:underline">${SITE.email}</a>.`;
-    }
-    btn.innerHTML = old;
+    const clean = (v, max = 1500) => String(v || "").replace(/[\u0000-\u0008\u000B-\u001F\u007F]/g, "").trim().slice(0, max);
+    const services = $$("input[name=services]:checked", form).map((i) => i.value);
+    const lines = [
+      "Hi Faisal, I'd like to discuss a project.",
+      "",
+      `*Name:* ${clean(form.name.value, 80)}`,
+      `*Email:* ${clean(form.email.value, 120)}`,
+      form.phone.value.trim() ? `*Phone:* ${clean(form.phone.value, 30)}` : null,
+      form.budget.value ? `*Budget:* ${clean(form.budget.value, 40)}` : null,
+      services.length ? `*Services:* ${services.map((x) => clean(x, 60)).join(", ")}` : null,
+      "",
+      `*Project details:*`,
+      clean(form.message.value),
+    ].filter((l) => l !== null);
+    const url = `https://wa.me/${SITE.whatsapp}?text=${encodeURIComponent(lines.join("\n"))}`;
+    // open WhatsApp straight from the click so pop-up blockers allow it
+    const win = window.open(url, "_blank");
+    if (win) win.opener = null; else location.href = url;
+    // keep a copy in Netlify Forms too (silently ignored if it fails)
+    fetch("/", { method: "POST", headers: { "Content-Type": "application/x-www-form-urlencoded" }, body: new URLSearchParams(new FormData(form)).toString() }).catch(() => {});
+    status.className = "form__status ok";
+    status.innerHTML = `WhatsApp is opening with your details — just tap <b>Send</b> there. Didn't open? <a href="${url}" target="_blank" rel="noopener noreferrer" style="text-decoration:underline">Open WhatsApp</a>`;
+    form.reset();
   });
+}
+
+/* ---------- live visitors (footer): Netlify Function + Blobs, live site only ---------- */
+function initVisitors() {
+  const box = $("#visitors");
+  if (!box || location.protocol !== "https:" || !window.fetch) return;
+  let id = store.get("vid"), first = !id;
+  if (!id) { id = (crypto.randomUUID ? crypto.randomUUID() : String(Math.random()).slice(2) + Date.now()).replace(/[^a-z0-9]/gi, "").slice(0, 24); store.set("vid", id); }
+  const ping = async () => {
+    if (document.hidden) return;
+    try {
+      const r = await fetch("/api/visitors", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ id, isNew: first }) });
+      if (!r.ok) return;
+      first = false;
+      const d = await r.json();
+      $("#v-online", box).textContent = Math.max(1, +d.online || 1);
+      $("#v-total", box).textContent = (+d.total || 0).toLocaleString("en-IN");
+      box.hidden = false;
+    } catch {}
+  };
+  ping();
+  setInterval(ping, 30000);
+  document.addEventListener("visibilitychange", () => !document.hidden && ping());
 }
 
 /* ==========================================================================
@@ -1158,6 +1206,7 @@ if (page === "services") pageServices();
 if (page === "projects") pageProjects();
 if (page === "contact") pageContact();
 initReveals();
+initVisitors();
 initMarquees();
 initMagnetic();
 
