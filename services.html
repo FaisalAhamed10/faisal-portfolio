@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://cdnjs.cloudflare.com https://unpkg.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:; media-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-src 'none'">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+  <title>Services — Faisal Ahamed</title>
+  <meta name="description" content="Services by Faisal Ahamed: web development, e-commerce, SEO, performance marketing, social media, content &amp; creative, custom software and AI automation — plus the 70+ tools behind them.">
+  <meta name="theme-color" content="#06070c">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x2='1' y2='1'%3E%3Cstop stop-color='%233b82f6'/%3E%3Cstop offset='1' stop-color='%2322d3ee'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='16' fill='url(%23g)'/%3E%3Ctext x='32' y='42' font-family='Arial' font-weight='900' font-size='26' fill='white' text-anchor='middle'%3EFA%3C/text%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Plus+Jakarta+Sans:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="preload" as="image" href="assets/img/character.webp">
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body data-page="services" class="is-loading">
+  <div class="preloader" id="preloader" role="status" aria-label="Loading"></div>
+  <div id="app-header"></div>
+
+  <main>
+    <section class="page-hero">
+      <div class="blob blob--1"></div>
+      <div class="container">
+        <div class="breadcrumb"><a href="index.html">Home</a> / Services</div>
+        <h1 class="page-hero__title h-display" data-split data-split-now>My <span class="grad-text">services</span></h1>
+        <div class="page-hero__row"><p class="lead">Eight services, one partner — from websites and online stores to ads, SEO, creative and AI automation. Hover a card to see it come alive.</p><a href="contact.html" class="btn" data-magnetic><span class="btn-inner">Get a quote ↗</span></a></div>
+      </div>
+    </section>
+
+    <!-- SERVICES -->
+    <section class="section" id="services" style="padding-top:10px">
+      <div class="container">
+        <div class="section-head">
+          <div><span class="eyebrow">What I do</span><h2 class="h-section" data-split>Services that <span class="grad-text">grow</span> your business</h2></div>
+          <p class="lead" data-reveal>Eight services, one partner. Pick one or combine them into a complete digital growth plan.</p>
+        </div>
+        <div class="services" id="services-grid"></div>
+      </div>
+    </section>
+
+    <!-- TOOLS -->
+    <section class="section" id="tools" style="padding-top:0">
+      <div class="container">
+        <div class="section-head">
+          <div><span class="eyebrow">My toolkit</span><h2 class="h-section" data-split><span id="tool-count">60</span>+ tools I <span class="grad-text">work with</span></h2></div>
+          <p class="lead" data-reveal>From React and Node.js to Shopify, Google Ads and AI agents — the right tool for every job. Tap a category to filter.</p>
+        </div>
+        <div class="tool-tabs" id="tool-tabs" data-reveal></div>
+        <div class="tools-grid" id="tools-grid"></div>
+      </div>
+    </section>
+
+    <!-- TOOLS MARQUEE -->
+    <div class="marquee" id="tools-marquee" data-direction="right" data-duration="60">
+      <div class="marquee__track"><div class="marquee__group"></div></div>
+    </div>
+  </main>
+
+  <div id="app-footer"></div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" integrity="sha384-g4NTh/Iv5PPU4xPyhEWqPcwtNXOvdaDI8LLnyYfyNZOjKJeYQyjzQ9X5275eBjpt" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" integrity="sha384-Z3REaz79l2IaAZqJsSABtTbhjgOUYyV3p90XNnAPCSHg3EMTz1fouunq9WZRtj3d" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="https://unpkg.com/lenis@1.1.13/dist/lenis.min.js" integrity="sha384-B2WBjDzEjJpYvhmi2UyEn7rektqkf5suS6sNoyyrf0EBAwBHdkiXxIlU0V5Ru2ed" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="assets/js/main.js"></script>
+</body>
+</html>
