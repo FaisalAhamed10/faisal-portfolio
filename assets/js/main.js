@@ -1139,7 +1139,12 @@ function pageContact() {
   $("#c-loc").textContent = SITE.location;
 
   const form = $("#contact-form"), status = $(".form__status", form);
-  const rules = { name: (v) => v.trim().length > 1, email: (v) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v), message: (v) => v.trim().length > 9 };
+  // required: name + phone; email is optional but must look valid if filled in; message is optional
+  const rules = {
+    name: (v) => v.trim().length > 1,
+    phone: (v) => /^\+?[\d\s().-]{7,20}$/.test(v.trim()) && v.replace(/\D/g, "").length >= 7 && v.replace(/\D/g, "").length <= 15,
+    email: (v) => !v.trim() || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim()),
+  };
   const check = (input) => { const ok = rules[input.name] ? rules[input.name](input.value) : true; input.closest(".field").classList.toggle("has-error", !ok); return ok; };
   Object.keys(rules).forEach((n) => form[n].addEventListener("blur", () => check(form[n])));
   form.addEventListener("submit", (e) => {
@@ -1152,13 +1157,10 @@ function pageContact() {
       "Hi Faisal, I'd like to discuss a project.",
       "",
       `*Name:* ${clean(form.name.value, 80)}`,
-      `*Email:* ${clean(form.email.value, 120)}`,
-      form.phone.value.trim() ? `*Phone:* ${clean(form.phone.value, 30)}` : null,
-      form.budget.value ? `*Budget:* ${clean(form.budget.value, 40)}` : null,
+      `*Phone:* ${clean(form.phone.value, 30)}`,
+      form.email.value.trim() ? `*Email:* ${clean(form.email.value, 120)}` : null,
       services.length ? `*Services:* ${services.map((x) => clean(x, 60)).join(", ")}` : null,
-      "",
-      `*Project details:*`,
-      clean(form.message.value),
+      ...(form.message.value.trim() ? ["", `*Project details:*`, clean(form.message.value)] : []),
     ].filter((l) => l !== null);
     const url = `https://wa.me/${SITE.whatsapp}?text=${encodeURIComponent(lines.join("\n"))}`;
     // open WhatsApp straight from the click so pop-up blockers allow it
