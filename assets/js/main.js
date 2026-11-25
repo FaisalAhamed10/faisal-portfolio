@@ -130,6 +130,8 @@ const SITES = [
     text: "A luxury calendula skincare brand site with a 3D blooming flower and serum, scroll-driven storytelling, an ingredient explorer and a full cash-on-delivery checkout.", tags: ["React", "Three.js", "GSAP", "Netlify"] },
   { name: "Dentora", url: "https://dentora-smiles.netlify.app/", img: "dentora", h: 3106, color: "#1e6fa8", cat: "Custom website · Dental clinic",
     text: "A premium dental clinic website with smooth scroll animations, a full treatment catalogue, an interactive \"why choose us\" showcase and appointment booking.", tags: ["HTML / CSS / JS", "GSAP", "Lenis", "Netlify"] },
+  { name: "PÉTALE", url: "https://petale-atelier.netlify.app/", img: "petale", h: 2250, color: "#b3394f", cat: "Custom store · Luxury bouquets",
+    text: "A luxury flower boutique with a 3D bouquet that blooms and scatters petals as you scroll, a bouquet customiser, collections and a full cart experience.", tags: ["React", "Three.js", "GSAP", "Netlify"] },
 ];
 
 // Posters in assets/img/posters/ — [file, industry]
